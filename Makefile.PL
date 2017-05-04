@@ -3,10 +3,10 @@ use ExtUtils::MakeMaker 7.12;
 
 WriteMakefile(
     NAME              => 'UV',
-    VERSION_FROM      => 'lib/UV.pm', # finds $VERSION, requires EU::MM from perl >= 5.5
+    VERSION_FROM      => 'lib/UV.pm',
     PREREQ_PM         => {'ExtUtils::MakeMaker' => '7.12'}, # e.g., Module::Name => 1.1
-    ABSTRACT_FROM     => 'lib/UV.pm', # retrieve abstract from module
-    AUTHOR            => 'Chase Whitener <cwhitener@(none)>',
+    ABSTRACT_FROM     => 'lib/UV.pm',
+    AUTHOR            => 'Chase Whitener <capoeirab@cpan.org>',
     LICENSE           => 'perl',
     CCFLAGS           => '-Wall -std=c99',
     OPTIMIZE          => '-O3',

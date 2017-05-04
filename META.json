@@ -1,7 +1,7 @@
 {
    "abstract" : "Perl extension for LibUV",
    "author" : [
-      "Chase Whitener <cwhitener@(none)>"
+      "Chase Whitener <capoeirab@cpan.org>"
    ],
    "dynamic_config" : 1,
    "generated_by" : "ExtUtils::MakeMaker version 7.24, CPAN::Meta::Converter version 2.150005",

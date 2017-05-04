@@ -1,13 +1,4 @@
-#include "EXTERN.h"
-#include "perl.h"
-#include "XSUB.h"
-#define NEED_newRV_noinc_GLOBAL
-#define NEED_newCONSTSUB_GLOBAL
-#include "ppport.h"
-#include "string.h"
-#include "uv.h"
-
-#define LUV_DOUBLETIME(TV) ((double)(TV).tv_sec + 1e-6*(TV).tv_usec)
+#include "p5_luv.h"
 
 MODULE = UV::Util       PACKAGE = UV::Util   PREFIX = luv_
 

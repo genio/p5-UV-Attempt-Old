@@ -1,3 +1,16 @@
+#ifndef P5_LUV_H
+#define P5_LUV_H
+
+#include "EXTERN.h"
+#include "perl.h"
+#include "XSUB.h"
+#define NEED_newRV_noinc
+#define NEED_sv_2pv_flags
+#include "ppport.h"
+#include "string.h"
+#include "uv.h"
+
+#define LUV_DOUBLETIME(TV) ((double)(TV).tv_sec + 1e-6*(TV).tv_usec)
 #define LUV_SLAB_SIZE 65536
 #define LUV_CHECK_HASH(self)                                         \
 if (!(SvROK(self) && SvTYPE(SvRV(self)) == SVt_PVHV)) {              \
@@ -51,3 +64,5 @@ void luv_new(class, ...)
     }
     XPUSHs(sv_2mortal(obj));
 */
+
+#endif

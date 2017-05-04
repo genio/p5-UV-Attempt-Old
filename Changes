@@ -1,0 +1,4 @@
+Revision history for Perl extension UV.
+
+0.001  2017-05-03
+    - Implemented and documented the UV::Util functions

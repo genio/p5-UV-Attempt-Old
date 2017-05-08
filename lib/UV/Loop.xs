@@ -79,6 +79,20 @@ void luv_DESTROY(self)
         }
         free(self);
 
+int luv_alive(self)
+    UV::Loop self;
+    CODE:
+        RETVAL = uv_loop_alive(self->uv_loop);
+    OUTPUT:
+    RETVAL
+
+int luv_default(self)
+    UV::Loop self;
+    CODE:
+        RETVAL = (self->is_default)? 1: 0;
+    OUTPUT:
+        RETVAL
+
 int luv_fileno(self)
     UV::Loop self;
     CODE:
@@ -92,13 +106,6 @@ double luv_get_timeout(self)
         RETVAL=(double) (uv_backend_timeout(self->uv_loop) / 1000.0);
     OUTPUT:
     RETVAL
-
-int luv_is_default(self)
-    UV::Loop self;
-    CODE:
-        RETVAL = (self->is_default)? 1: 0;
-    OUTPUT:
-        RETVAL
 
 size_t luv_now(self)
     UV::Loop self;

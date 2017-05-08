@@ -4,10 +4,6 @@
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
-#define NEED_newRV_noinc
-#define NEED_sv_2pv_flags
-#include "ppport.h"
-#include "string.h"
 #include "uv.h"
 
 #define LUV_DOUBLETIME(TV) ((double)(TV).tv_sec + 1e-6*(TV).tv_usec)
@@ -18,7 +14,7 @@ if (!(SvROK(self) && SvTYPE(SvRV(self)) == SVt_PVHV)) {              \
 }
 
 /* Loop */
-typedef struct {
+typedef struct Loops {
     uv_loop_t loop_struct;
     uv_loop_t *uv_loop;
     int is_default;
@@ -28,41 +24,14 @@ typedef struct {
     } buffer;
 } Loop;
 
-
-/*
-void luv_new(class, ...)
-    SV* class;
-    int is_default;
-  PREINIT:
-    unsigned int iStack;
-    HV* hash;
-    SV* obj;
-    const char* classname;
+/* Handle */
+typedef struct Handles {
+    uv_handle_t *uv_handle;
+    int flags;
+    int initialized;
     Loop *loop;
-    uv_loop_t *uv_loop;
-  PPCODE:
-    if (sv_isobject(class)) {
-      classname = sv_reftype(SvRV(class), 1);
-    }
-    else {
-      if (!SvPOK(class))
-        croak("Need an object or class name as first argument to the constructor.");
-      classname = SvPV_nolen(class);
-    }
+    CV *on_close_cb;
+} Handle;
 
-    hash = (HV *)sv_2mortal((SV *)newHV());
-    obj = sv_bless( newRV_noinc((SV*)hash), gv_stashpv(classname, 1) );
-
-
-    if (items > 1) {
-      if (!(items % 2))
-        croak("Uneven number of argument to constructor.");
-
-      for (iStack = 1; iStack < items; iStack += 2) {
-        hv_store_ent(hash, ST(iStack), newSVsv(ST(iStack+1)), 0);
-      }
-    }
-    XPUSHs(sv_2mortal(obj));
-*/
 
 #endif

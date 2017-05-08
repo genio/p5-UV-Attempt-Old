@@ -1,4 +1,8 @@
 #include "p5_luv.h"
+#include "string.h"
+#define NEED_newRV_noinc
+#define NEED_newCONSTSUB
+#include "ppport.h"
 
 MODULE = UV::Util       PACKAGE = UV::Util   PREFIX = luv_
 

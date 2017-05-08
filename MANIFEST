@@ -13,3 +13,4 @@ lib/UV/UDP.pm
 lib/UV/UDP.xs
 lib/UV/Util.pm
 lib/UV/Util.xs
+typemap

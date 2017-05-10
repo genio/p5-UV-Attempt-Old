@@ -103,7 +103,8 @@ int luv_fileno(self)
 double luv_get_timeout(self)
     UV::Loop self;
     CODE:
-        RETVAL=(double) (uv_backend_timeout(self->uv_loop) / 1000.0);
+        RETVAL=(double) uv_backend_timeout(self->uv_loop);
+        if (RETVAL > 0) RETVAL = RETVAL / 1000.0;
     OUTPUT:
     RETVAL
 

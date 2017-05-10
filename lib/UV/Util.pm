@@ -333,7 +333,7 @@ current process.
 This L<function|http://docs.libuv.org/en/latest/misc.html#c.uv_uptime>
 returns a float representing the current system uptme
 
-=head2 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENSE
 
 Copyright 2017, Chase Whitener.
 

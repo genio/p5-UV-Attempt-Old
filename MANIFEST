@@ -5,12 +5,12 @@ ppport.h
 p5_luv.h
 t/10-util.t
 t/11-loop.t
-t/12-udp.t
+t/12-timer.t
 lib/UV.pm
 lib/UV/Loop.pm
 lib/UV/Loop.xs
-lib/UV/UDP.pm
-lib/UV/UDP.xs
+lib/UV/Timer.pm
+lib/UV/Timer.xs
 lib/UV/Util.pm
 lib/UV/Util.xs
 typemap

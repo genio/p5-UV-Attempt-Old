@@ -33,5 +33,11 @@ typedef struct Handles {
     CV *on_close_cb;
 } Handle;
 
+/* Timer */
+typedef struct Timers {
+    Handle handle;
+    uv_timer_t timer_h;
+    CV *callback;
+} Timer;
 
 #endif

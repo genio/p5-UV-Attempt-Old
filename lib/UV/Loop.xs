@@ -39,7 +39,7 @@ UV::Loop luv_new(class, is_default = 0)
             if (default_loop) {
                 RETVAL = default_loop;
             } else {
-                RETVAL = malloc(sizeof(Loop));
+                RETVAL = &(Loop){};
                 if (!RETVAL) {
                     croak("Class %s failed to initialize", class);
                 }
@@ -54,7 +54,7 @@ UV::Loop luv_new(class, is_default = 0)
                 default_loop = RETVAL;
             }
         } else {
-            RETVAL = malloc(sizeof(Loop));
+            RETVAL = &(Loop){};
             if (!RETVAL) {
                 croak("Class %s failed to initialize", class);
             }
@@ -77,7 +77,6 @@ void luv_DESTROY(self)
             self->uv_loop->data = NULL;
             uv_loop_close(self->uv_loop);
         }
-        free(self);
 
 int luv_alive(self)
     UV::Loop self;

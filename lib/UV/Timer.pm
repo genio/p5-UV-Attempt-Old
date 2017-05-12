@@ -1,4 +1,4 @@
-package UV::UDP;
+package UV::Timer;
 
 our $VERSION = '0.001';
 our $XS_VERSION = $VERSION;

@@ -34,6 +34,8 @@ can_ok(
     isa_ok($dloop, 'UV::Loop', 'default_loop: got a new default loop');
     is($dloop->default, 1, 'default: true');
 
+    # blessed scalar refs that are memory locations to the C structs
+    # two "different" default loops should point to the same memory location
     is(${$loop}, ${$dloop}, 'default loops one in the same!');
 }
 

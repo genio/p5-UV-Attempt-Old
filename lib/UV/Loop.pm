@@ -7,7 +7,6 @@ $VERSION = eval $VERSION;
 use strict;
 use warnings;
 
-use base 'Exporter';
 require XSLoader;
 XSLoader::load();
 

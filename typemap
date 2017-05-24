@@ -1,9 +1,9 @@
 TYPEMAP
 
-Loop *          T_PTROBJ
+p5luv_loop *    T_PTROBJ
 UV_Loop         T_PTROBJ
 UV::Loop        T_PTROBJ
 
-Timer *         T_PTROBJ
+p5luv_timer *   T_PTROBJ
 UV_Timer        T_PTROBJ
 UV::Timer       T_PTROBJ

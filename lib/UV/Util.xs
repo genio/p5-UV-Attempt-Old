@@ -1,7 +1,6 @@
-#include "p5_luv.h"
-#include "string.h"
 #define NEED_newRV_noinc
-#define NEED_newCONSTSUB
+#include "string.h"
+#include "p5luv.h"
 #include "ppport.h"
 
 MODULE = UV::Util       PACKAGE = UV::Util   PREFIX = luv_
@@ -94,8 +93,8 @@ SV * luv_getrusage()
         }
 
         result = newHV();
-        hv_stores(result, "ru_utime", newSVnv(LUV_DOUBLETIME(ru.ru_utime)));
-        hv_stores(result, "ru_stime", newSVnv(LUV_DOUBLETIME(ru.ru_stime)));
+        hv_stores(result, "ru_utime", newSVnv(P5LUV_DOUBLETIME(ru.ru_utime)));
+        hv_stores(result, "ru_stime", newSVnv(P5LUV_DOUBLETIME(ru.ru_stime)));
         hv_stores(result, "ru_maxrss", newSVuv((size_t) ru.ru_maxrss));
         hv_stores(result, "ru_ixrss", newSVuv((size_t) ru.ru_ixrss));
         hv_stores(result, "ru_idrss", newSVuv((size_t) ru.ru_idrss));

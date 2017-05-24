@@ -1,12 +1,8 @@
-#include "p5_luv.h"
-#define NEED_newRV_noinc_GLOBAL
+#include "p5luv.h"
+
 #define NEED_newCONSTSUB_GLOBAL
 #include "ppport.h"
 
-typedef Loop * UV_Loop;
-typedef Loop * UV__Loop;
-
-static Loop *default_loop;
 
 MODULE = UV::Loop       PACKAGE = UV::Loop    PREFIX = luv_
 
@@ -32,40 +28,13 @@ UV::Loop luv_new(class, is_default = 0)
     ALIAS:
         UV::Loop::default_loop = 1
     CODE:
-        uv_loop_t *uv_loop;
-
+        PERL_UNUSED_VAR(class);
         if (ix == 1) is_default = 1;
         if (is_default) {
-            if (default_loop) {
-                RETVAL = default_loop;
-            } else {
-                RETVAL = &(Loop){};
-                if (!RETVAL) {
-                    croak("Class %s failed to initialize", class);
-                }
-                uv_loop = uv_default_loop();
-                if (uv_loop_init(uv_loop) < 0) {
-                    croak("Error initializing loop");
-                }
-                uv_loop->data = RETVAL;
-                RETVAL->uv_loop = uv_loop;
-                RETVAL->is_default = 1;
-                RETVAL->buffer.in_use = 0;
-                default_loop = RETVAL;
-            }
-        } else {
-            RETVAL = &(Loop){};
-            if (!RETVAL) {
-                croak("Class %s failed to initialize", class);
-            }
-            uv_loop = &RETVAL->loop_struct;
-            if (uv_loop_init(uv_loop) < 0) {
-                croak("Error initializing loop");
-            }
-            uv_loop->data = RETVAL;
-            RETVAL->uv_loop = uv_loop;
-            RETVAL->is_default = 0;
-            RETVAL->buffer.in_use = 0;
+            RETVAL = p5luv_loop_new_default();
+        }
+        else {
+            RETVAL = p5luv_loop_new();
         }
     OUTPUT:
     RETVAL
@@ -73,36 +42,33 @@ UV::Loop luv_new(class, is_default = 0)
 void luv_DESTROY(self)
     UV::Loop self;
     CODE:
-        if (self->uv_loop) {
-            self->uv_loop->data = NULL;
-            uv_loop_close(self->uv_loop);
-        }
+        p5luv_loop_destroy(self);
 
 int luv_alive(self)
     UV::Loop self;
     CODE:
-        RETVAL = uv_loop_alive(self->uv_loop);
+        RETVAL = uv_loop_alive(self);
     OUTPUT:
     RETVAL
 
 int luv_default(self)
     UV::Loop self;
     CODE:
-        RETVAL = (self->is_default)? 1: 0;
+        RETVAL = p5luv_loop_is_default(self);
     OUTPUT:
         RETVAL
 
 int luv_fileno(self)
     UV::Loop self;
     CODE:
-        RETVAL = (int) uv_backend_fd(self->uv_loop);
+        RETVAL = (int) uv_backend_fd(self);
     OUTPUT:
     RETVAL
 
 double luv_get_timeout(self)
     UV::Loop self;
     CODE:
-        RETVAL=(double) uv_backend_timeout(self->uv_loop);
+        RETVAL=(double) uv_backend_timeout(self);
         if (RETVAL > 0) RETVAL = RETVAL / 1000.0;
     OUTPUT:
     RETVAL
@@ -110,7 +76,7 @@ double luv_get_timeout(self)
 size_t luv_now(self)
     UV::Loop self;
     CODE:
-        RETVAL = (size_t) uv_now(self->uv_loop);
+        RETVAL = (size_t) uv_now(self);
     OUTPUT:
     RETVAL
 
@@ -123,16 +89,16 @@ int luv_run(self, mode = UV_RUN_DEFAULT)
         }
 
         /* TODO: thread safety? */
-        RETVAL = uv_run(self->uv_loop, mode);
+        RETVAL = uv_run(self, mode);
     OUTPUT:
     RETVAL
 
 void luv_stop(self)
     UV::Loop self;
     CODE:
-        uv_stop(self->uv_loop);
+        uv_stop(self);
 
 void luv_update_time(self)
     UV::Loop self;
     CODE:
-        uv_update_time(self->uv_loop);
+        uv_update_time(self);

@@ -1,45 +1,64 @@
-#include "p5_luv.h"
+#include "p5luv.h"
 
-#define NEED_newRV_noinc_GLOBAL
-#define NEED_newCONSTSUB_GLOBAL
 #include "ppport.h"
-
-typedef Timer * UV_Timer;
-typedef Timer * UV__Timer;
 
 MODULE = UV::Timer       PACKAGE = UV::Timer   PREFIX = luv_
 
 PROTOTYPES: ENABLE
 
-UV::Timer luv_new(class)
+BOOT:
+{
+    HV *stash = gv_stashpvn("UV::Timer", 10, TRUE);
+
+    /* expose the different handle type constants */
+    newCONSTSUB(stash, "UV_TIMER", newSViv(UV_TIMER));
+}
+
+UV::Timer luv_new(class, loop)
         char * class;
+        UV::Loop loop;
     CODE:
-        RETVAL = &(Timer){};
-        RETVAL->timer_h.data = RETVAL;
-        ((Handle *)RETVAL)->uv_handle = (uv_handle_t *)&RETVAL->timer_h;
+        PERL_UNUSED_VAR(class);
+        /* handles the uv_timer_init(loop) and adds context */
+        RETVAL = p5luv_timer_new(loop);
     OUTPUT:
     RETVAL
 
-void luv_again(self)
+void luv_DESTROY(self)
     UV::Timer self;
     CODE:
-        int err;
-        if (uv_is_closing(((Handle *)self)->uv_handle)) {
-            croak("Handle is closing/closed.");
-        }
-        err = uv_timer_again(&self->timer_h);
-        if (err != 0) {
-            croak("Timer initialization error (%i): %s", err, uv_strerror(err));
-        }
+        p5luv_timer_destroy(self);
 
-void luv_stop(self)
+UV::Timer luv_on(self, action, callback)
     UV::Timer self;
+    const char *action;
+    SV *callback;
+    CODE:
+        if (strcmp(action, "close") == 0) {
+            self->close_cb = newSVsv(callback);
+        } else if (strcmp(action, "alloc") == 0) {
+            self->alloc_cb = newSVsv(callback);
+        } else if (strcmp(action, "timer") == 0) {
+            self->timer_cb = newSVsv(callback);
+        } else {
+            warn("Invalid action. Can't supply callback for %s", action);
+        }
+        RETVAL = self;
+    OUTPUT:
+    RETVAL
+
+UV::Timer luv_start(self, timeout=0, repeat=0, cb=NULL)
+    UV::Timer self;
+    size_t timeout;
+    size_t repeat;
+    SV *cb;
     CODE:
         int err;
-        if (uv_is_closing(((Handle *)self)->uv_handle)) {
-            croak("Handle is closing/closed.");
-        }
-        err = uv_timer_stop(&self->timer_h);
+        if (cb != (SV *)NULL) self->timer_cb = newSVsv(cb);
+        err = uv_timer_start(self->handle_ptr, p5luv_timer_timer_cb, ((uint64_t)timeout)*1000, ((uint64_t)repeat)*1000);
         if (err != 0) {
-            croak("Timer stop error (%i): %s", err, uv_strerror(err));
+            croak("Error starting timer (%i): %s", err, uv_strerror(err));
         }
+        RETVAL = self;
+    OUTPUT:
+    RETVAL
